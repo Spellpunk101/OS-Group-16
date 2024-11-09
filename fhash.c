@@ -21,15 +21,14 @@ hashRecord* insert(hashRecord* head, char name[], uint32_t salary)
   uint32_t hash = jenkins_hash(name, strlen(name));
 
   hashRecord* index = head;
-  hashRecord* backup = head;
-  int exists = 0;
 
-  if(head == NULL)
+  if(index == NULL)
   {
     index = malloc(sizeof(hashRecord));
     index->hash = hash;
     strcpt(index->name, name);
     index->salary = salary;
+    index->next = NULL;
     return index;
   }
 
@@ -37,21 +36,20 @@ hashRecord* insert(hashRecord* head, char name[], uint32_t salary)
   {
     if(hash == index->hash)
     {
-      exists = 1;
       index->salary = salary;
       break;
     }
-    backup = index;
+    if(index->next == NULL)
+    {
+      index->next = malloc(sizeof(hashRecord));
+      index = index->next;
+      index->hash = hash;
+      strcpt(index->name, name);
+      index->salary = salary;
+      index->next = NULL;
+      break;
+    }
     index = index->next;
-  }
-
-  if(!exists)
-  {
-    backup->next = malloc(sizeof(hashRecord));
-    index = backup->next;
-    index->hash = hash;
-    strcpt(index->name, name);
-    index->salary = salary;
   }
 
   return head;
@@ -70,7 +68,14 @@ hashRecord* search(hashRecord* head, char name[])
   
   hashRecord* index = head;
 
-  return index; // if hash is found
+  while(index != NULL)
+  {
+    if(hash == index->hash)
+    {
+      return index; // if hash is found
+    }
+    index = index->next;
+  }
 
   return NULL; // if hash is not found
 }
