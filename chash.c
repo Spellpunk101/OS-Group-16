@@ -5,9 +5,7 @@
 
 #include "common.h"
 #include "common_threads.h"
-#include "insert.h"
-#include "delete.h"
-#include "search.h"
+#include "functionhash.h"
 
 typedef struct hash_struct
 {
