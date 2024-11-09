@@ -10,8 +10,8 @@ typedef struct hash_struct
 } hashRecord;
 
 uint32_t jenkins_hash(const uint8_t* key, size_t length);
-hashRecord* insert(char name[], uint32_t salary);
-hashRecord* delete(char name[]);
-hashRecord* search(char name[]);
+hashRecord* insert(hashRecord* head, char name[], uint32_t salary);
+hashRecord* delete(hashRecord* head, char name[]);
+hashRecord* search(hashRecord* head, char name[]);
 
 #endif // FHASH_H_
