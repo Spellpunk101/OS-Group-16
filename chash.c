@@ -17,7 +17,10 @@ typedef struct hash_struct
 
 int main()
 {
+  hashRecord *head = malloc(sizeof(hashRecord));
+
   
   
+  free(head);
   return 0;
 }
