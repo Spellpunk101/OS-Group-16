@@ -9,7 +9,7 @@
 
 int main()
 {
-  hashRecord* head = malloc(sizeof(hashRecord));
+  hashRecord* head = NULL;
   
   free(head);
   return 0;
