@@ -16,52 +16,71 @@ uint32_t jenkins_hash(const uint8_t* key, size_t length)
   return hash;
 }
 
+// insert a hash
 hashRecord* insert(hashRecord* head, char name[], uint32_t salary)
 {
   uint32_t hash = jenkins_hash(name, strlen(name));
 
   hashRecord* index = head;
 
-  if(index == NULL)
-  {
-    index = malloc(sizeof(hashRecord));
-    index->hash = hash;
-    strcpt(index->name, name);
-    index->salary = salary;
-    index->next = NULL;
-    return index;
-  }
-
   while(index != NULL)
   {
+    // if hash is found
     if(hash == index->hash)
     {
       index->salary = salary;
-      break;
+      return head;
     }
-    if(index->next == NULL)
-    {
-      index->next = malloc(sizeof(hashRecord));
-      index = index->next;
-      index->hash = hash;
-      strcpt(index->name, name);
-      index->salary = salary;
-      index->next = NULL;
-      break;
-    }
+
     index = index->next;
   }
 
-  return head;
+  // if hash is not found
+  index = malloc(sizeof(hashRecord));
+  index->hash = hash;
+  strcpt(index->name, name);
+  index->salary = salary;
+  index->next = head;
+
+  return index;
 }
 
+// delete a hash
 hashRecord* delete(hashRecord* head, char name[])
 {
   uint32_t hash = jenkins_hash(name, strlen(name));
 
+  hashRecord* index = head;
+  hashRecord* backup = head;
+
+  while(index != NULL)
+  {
+    // if hash is found
+    if(hash == index->hash)
+    {
+      // first element in linkedlist
+      if(index == head)
+      {
+        head = index->next;
+        free(index);
+      }
+      else
+      {
+        backup->next = index->next;
+        free(index);
+      }
+      return head;
+    }
+
+    backup = index;
+    index = index->next;
+  }
+
+  // if hash is not found
   return head;
 }
-  
+
+// search for a hash
 hashRecord* search(hashRecord* head, char name[])
 {
   uint32_t hash = jenkins_hash(name, strlen(name));
@@ -70,12 +89,15 @@ hashRecord* search(hashRecord* head, char name[])
 
   while(index != NULL)
   {
+    // if hash is found
     if(hash == index->hash)
     {
-      return index; // if hash is found
+      return index;
     }
+
     index = index->next;
   }
 
-  return NULL; // if hash is not found
+  // if hash is not found
+  return NULL;
 }
