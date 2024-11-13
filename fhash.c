@@ -23,7 +23,17 @@ hashRecord* insert(hashRecord* head, char name[], uint32_t salary)
 
   hashRecord* index = head;
 
-  while(index != NULL)
+  //empty hashTable
+  if(head == NULL){
+    hashRecord* newHead = (hashRecord*) malloc(sizeof(hashRecord));
+    newHead->hash = hash;
+    strcpy(newHead->name, name);
+    newHead->salary = salary;
+    newHead->next = NULL;
+    return newHead;
+  }
+  //look through list for hash
+  while(1)
   {
     // if hash is found
     if(hash == index->hash)
@@ -32,17 +42,19 @@ hashRecord* insert(hashRecord* head, char name[], uint32_t salary)
       return head;
     }
 
+    if(index->next == NULL) break;
     index = index->next;
   }
 
   // if hash is not found
-  index = malloc(sizeof(hashRecord));
-  index->hash = hash;
-  strcpt(index->name, name);
-  index->salary = salary;
-  index->next = head;
+  hashRecord* newNode = (hashRecord*) malloc(sizeof(hashRecord));
+  newNode->hash = hash;
+  strcpy(newNode->name, name);
+  newNode->salary = salary;
+  newNode->next = NULL;
+  index->next = newNode;
 
-  return index;
+  return head;
 }
 
 // delete a hash
