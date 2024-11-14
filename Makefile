@@ -7,12 +7,11 @@ LDIR =../lib
 
 LIBS=-lm
 
-_DEPS = hellomake.h
+_DEPS = fhash.h rwlock.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = hellomake.o hellofunc.o 
+_OBJ = fhash.o rwlock.o chash.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
-
 
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
