@@ -9,6 +9,8 @@
 
 void readFile(int *thread_count, char instructions[50][3][50], int *instruction_count);
 
+void readFile(int *thread_count, char instructions[50][3][50], int *instruction_count);
+
 int main()
 {
   hashListHead_t* head = (hashListHead_t*) malloc(sizeof(hashListHead_t));
@@ -45,7 +47,7 @@ int main()
   //need some condition variable/semaphore to wait until threads done to free and print
   free(pthreads);
   free(thread_args);
-
+  
   printf("Thread Count: %d\n", thread_count);
   printf("Instructions:\n");
   for (int i = 0; i < instruction_count; i++)
