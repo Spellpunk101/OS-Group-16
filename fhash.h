@@ -9,6 +9,11 @@ typedef struct hash_struct
   struct hash_struct *next;
 } hashRecord;
 
+typedef struct{
+  hashRecord* head;
+  rwlock_t* rwlock;
+} hashListHead_t;
+
 uint32_t jenkins_hash(const uint8_t* key, size_t length);
 hashRecord* insert(hashRecord* head, char name[], uint32_t salary);
 hashRecord* delete(hashRecord* head, char name[]);
