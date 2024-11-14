@@ -11,7 +11,7 @@ void readFile(int *thread_count, char instructions[50][3][50], int *instruction_
 
 int main()
 {
-  hashRecord *head = NULL;
+  hashRecord **head = NULL;
 
   int thread_count = 0;
   char instructions[50][3][50];
