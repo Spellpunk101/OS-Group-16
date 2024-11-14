@@ -1,25 +1,22 @@
-IDIR =../include
-CC=gcc
-CFLAGS=-I$(IDIR)
+SRC := \
+	rwlock.c \
+        fhash.c \
+        threadcommands.c \
+        chash.c
 
-ODIR=obj
-LDIR =../lib
+OBJ := $(SRC:%.c=%.o)
 
-LIBS=-lm
+PRG := chash
 
-_DEPS = fhash.h rwlock.h
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+.PHONY: all clean
 
-_OBJ = fhash.o rwlock.o chash.o
-OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+all: $(PRG)
 
-$(ODIR)/%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+$(PRG): $(OBJ)
+        $(CC) $(CFLAGS) -o $@ $^
 
-hellomake: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
-
-.PHONY: clean
+%.o: %.c
+        $(CC) $(CFLAGS) -c $<
 
 clean:
-  rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
+        rm -f $(OBJ) $(PRG)
