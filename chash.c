@@ -11,7 +11,8 @@ void readFile(int *thread_count, char instructions[50][3][50], int *instruction_
 
 int main()
 {
-  hashRecord **head = NULL;
+  hashListHead_t* head = (hashListHead_t*) malloc(sizeof(hashListHead_t));
+  rwlock_init(head->rwlock);
 
   int thread_count = 0;
   char instructions[50][3][50];

@@ -4,7 +4,7 @@
 typedef struct {
     char name[50];
     uint32_t salary;
-    hashRecord** headSpace;
+    hashListHead_t* headSpace;
 } thread_args_t;
 
 void* thread_insert(void* arg);
