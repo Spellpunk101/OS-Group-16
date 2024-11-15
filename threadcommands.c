@@ -101,7 +101,7 @@ void* thread_print(void* arg){
 
 void sortRecordsByHash(hashRecord** list, int numEntries){
     for(int i = 0; i < numEntries-1; i++){
-        for(int j = i; j < numEntries-1; j++){
+        for(int j = 0; j < numEntries-1-i; j++){
             if(list[j]->hash > list[j+1]->hash){
                 hashRecord* tmp = list[j];
                 list[j] = list[j+1];
