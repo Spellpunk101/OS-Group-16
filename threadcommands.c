@@ -82,16 +82,12 @@ void* thread_print(void* arg){
 
     //assuming can only handle 50 instructions
     rwlock_acquire_readlock(headSpace->rwlock);
-    hashRecord* index = headSpace->head;
+    hashRecord** list = (hashRecord**) calloc(50, sizeof(hashRecord*));
     int numRecords = 0;
-    while(index != NULL){
-        numRecords++;
-        index = index->next;
-    }
-    hashRecord** list = (hashRecord**) calloc(numRecords, sizeof(hashRecord*));
-    index = headSpace->head;
+    hashRecord* index = headSpace->head;
     while(index != NULL){
         list[numRecords] = index;
+        numRecords++;
         index = index->next;
     }
     sortRecordsByHash(list, numRecords);
@@ -99,7 +95,7 @@ void* thread_print(void* arg){
         printf("%u,%s,%u\n", list[i]->hash, list[i]->name, list[i]->salary);
     }
     rwlock_release_readlock(headSpace->rwlock);
-    free(list);
+    
     return NULL;
 }
 
