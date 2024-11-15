@@ -9,7 +9,7 @@
 #include "threadcommands.h"
 #include "rwlock.h"
 
-void readFile(int *thread_count, char instructions[50][3][50], int *instruction_count);
+void readFile(int *thread_count, char*** instructions, int *instruction_count);
 
 
 int main()
@@ -22,8 +22,25 @@ int main()
 
   head->head = NULL;
 
+  FILE *file = fopen("commands.txt", "r");
+  if (file == NULL)
+  {
+    printf("Error: file not found\n");
+    exit(1);
+  }
   int thread_count = 0;
-  char instructions[50][3][50];
+  char line[70];
+  fgets(line, sizeof(line), file);
+  char *token = strtok(line, ",");
+  token = strtok(NULL, ",");
+      if (token != NULL)
+      {
+        thread_count = atoi(token);
+      }
+
+  fclose(file);
+
+  char*** instructions = (char***) malloc(thread_count*3*50*sizeof(char));
   int instruction_count = 0;
 
   readFile(&thread_count, instructions, &instruction_count);
@@ -83,6 +100,7 @@ int main()
   printArgs.headSpace = head;
   thread_print(&printArgs);
 
+  free(instructions);
   free(pthreads);
   free(thread_args);
   free(head->rwlock);
@@ -96,7 +114,7 @@ int main()
   return 0;
 }
 
-void readFile(int *thread_count, char instructions[50][3][50], int *instruction_count)
+void readFile(int *thread_count, char*** instructions, int *instruction_count)
 {
   FILE *file = fopen("commands.txt", "r");
   if (file == NULL)
@@ -104,7 +122,7 @@ void readFile(int *thread_count, char instructions[50][3][50], int *instruction_
     printf("Error: file not found\n");
     exit(1);
   }
-  char line[50];
+  char line[70];
 
   while (fgets(line, sizeof(line), file))
   {
@@ -116,11 +134,7 @@ void readFile(int *thread_count, char instructions[50][3][50], int *instruction_
 
     if (strcmp(token, "threads") == 0)
     {
-      token = strtok(NULL, ",");
-      if (token != NULL)
-      {
-        *thread_count = atoi(token);
-      }
+      continue;
     }
     else
     {
