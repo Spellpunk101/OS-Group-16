@@ -10,6 +10,7 @@ typedef struct _rwlock_t
     int readers, acquires, releases;
 } rwlock_t;
 
+uint64_t micro_time();
 void rwlock_init(rwlock_t *lock);
 void rwlock_acquire_readlock(rwlock_t *lock);
 void rwlock_release_readlock(rwlock_t *lock);
