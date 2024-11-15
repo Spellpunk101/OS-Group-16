@@ -1,7 +1,11 @@
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+#include "rwlock.h"
+
+
 #include "fhash.h"
 
-#include "rwlock.h"
-#include <stdint.h>
 
 uint32_t jenkins_hash(const uint8_t* key, size_t length)
 {

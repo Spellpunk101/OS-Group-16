@@ -9,7 +9,6 @@
 
 void readFile(int *thread_count, char instructions[50][3][50], int *instruction_count);
 
-void readFile(int *thread_count, char instructions[50][3][50], int *instruction_count);
 
 int main()
 {
