@@ -61,16 +61,29 @@ int main()
   }
 
   //need some condition variable/semaphore to wait until threads done to free and print
-  free(pthreads);
-  free(thread_args);
   
-  printf("Thread Count: %d\n", thread_count);
-  printf("Instructions:\n");
-  for (int i = 0; i < instruction_count; i++)
-  {
-    printf("[%s, %s, %s]\n", instructions[i][0], instructions[i][1], instructions[i][2]);
+  
+  // printf("Thread Count: %d\n", thread_count);
+  // printf("Instructions:\n");
+  // for (int i = 0; i < instruction_count; i++)
+  // {
+  //   printf("[%s, %s, %s]\n", instructions[i][0], instructions[i][1], instructions[i][2]);
+  // }
+  
+  for(int i = 0; i < thread_count; i++){
+    pthread_join(pthreads[i],NULL);
   }
 
+  printf("Finished all threads.\n");
+  printf("Number of lock acquisitions: %d\n",(head->rwlock)->acquires);
+  printf("Number of lock releases: %d\n", (head->rwlock)->releases);
+
+  thread_args_t printArgs;
+  printArgs.headSpace = head;
+  thread_print(&printArgs);
+
+  free(pthreads);
+  free(thread_args);
   free(head->rwlock);
   hashRecord* index = head->head;
   while(index != NULL){
