@@ -107,7 +107,7 @@ void readFile(int *thread_count, char ****instructions)
     printf("Error: file not found\n");
     exit(1);
   }
-  char line[50];
+  char line[70];
 
   int instruction_count = 0;
 
