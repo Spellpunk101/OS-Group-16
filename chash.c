@@ -80,8 +80,8 @@ int main()
   }
 
   fprintf(output, "Finished all threads.\n");
-  fprintf(output, "Number of lock acquisitions: %d\n",(head->rwlock)->acquires+1); //this is because we will acquire/release ONE more lock
-  fprintf(output, "Number of lock releases: %d\n", (head->rwlock)->releases+1);    //with the final call to thread_print after this.
+  fprintf(output, "Number of lock acquisitions:  %d\n",(head->rwlock)->acquires+1); //this is because we will acquire/release ONE more lock
+  fprintf(output, "Number of lock releases:  %d\n", (head->rwlock)->releases+1);    //with the final call to thread_print after this.
 
   thread_args_t printArgs;
   printArgs.headSpace = head;
