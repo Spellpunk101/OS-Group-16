@@ -9,7 +9,7 @@
 #include "threadcommands.h"
 #include "rwlock.h"
 
-void readFile(int *thread_count, char instructions[50][3][50], int *instruction_count);
+void readFile(int *thread_count, char ****instructions);
 
 FILE* output;
 
@@ -25,10 +25,9 @@ int main()
   head->head = NULL;
 
   int thread_count = 0;
-  char instructions[50][3][50];
-  int instruction_count = 0;
+  char ***instructions;
 
-  readFile(&thread_count, instructions, &instruction_count);
+  readFile(&thread_count, &instructions);
 
   fprintf(output, "Running %d threads\n", thread_count);
 
@@ -65,16 +64,6 @@ int main()
     }
   }
 
-  //need some condition variable/semaphore to wait until threads done to free and print
-
-
-  // printf("Thread Count: %d\n", thread_count);
-  // printf("Instructions:\n");
-  // for (int i = 0; i < instruction_count; i++)
-  // {
-  //   printf("[%s, %s, %s]\n", instructions[i][0], instructions[i][1], instructions[i][2]);
-  // }
-
   for(int i = 0; i < thread_count; i++){
     pthread_join(pthreads[i],NULL);
   }
@@ -97,11 +86,20 @@ int main()
     free(toFree);
   }
   free(head);
+  for (int i = 0; i < thread_count; i++)
+  {
+    for (int j = 0; j < 3; j++)
+    {
+      free(instructions[i][j]);
+    }
+    free(instructions[i]);
+  }
+  free(instructions);
   fclose(output);
   return 0;
 }
 
-void readFile(int *thread_count, char instructions[50][3][50], int *instruction_count)
+void readFile(int *thread_count, char ****instructions)
 {
   FILE *file = fopen("commands.txt", "r");
   if (file == NULL)
@@ -110,6 +108,8 @@ void readFile(int *thread_count, char instructions[50][3][50], int *instruction_
     exit(1);
   }
   char line[50];
+
+  int instruction_count = 0;
 
   while (fgets(line, sizeof(line), file))
   {
@@ -125,19 +125,28 @@ void readFile(int *thread_count, char instructions[50][3][50], int *instruction_
       if (token != NULL)
       {
         *thread_count = atoi(token);
+        *instructions = calloc(*thread_count, sizeof(char**));
+        for (int i = 0; i < *thread_count; i++)
+        {
+          (*instructions)[i] = calloc(3, sizeof(char*));
+          for (int j = 0; j < 3; j++)
+          {
+            (*instructions)[i][j] = calloc(50, sizeof(char));
+          }
+        }
       }
     }
     else
     {
-      strcpy(instructions[*instruction_count][0], token);
+      strcpy((*instructions)[instruction_count][0], token);
 
       token = strtok(NULL, ",");
-      strcpy(instructions[*instruction_count][1], token);
+      strcpy((*instructions)[instruction_count][1], token);
 
       token = strtok(NULL, ",");
-      strcpy(instructions[*instruction_count][2], token);
+      strcpy((*instructions)[instruction_count][2], token);
 
-      (*instruction_count)++;
+      instruction_count++;
     }
   }
 

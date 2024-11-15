@@ -81,8 +81,6 @@ void* thread_print(void* arg){
     thread_args_t* args = (thread_args_t*) arg;
     hashListHead_t* headSpace = args->headSpace;
 
-
-    //assuming can only handle 50 instructions
     rwlock_acquire_readlock(headSpace->rwlock);
     int numRecords = 0;
     hashRecord* index = headSpace->head;
