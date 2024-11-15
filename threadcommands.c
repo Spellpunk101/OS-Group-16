@@ -24,6 +24,7 @@ void* thread_insert(void* arg){
     pthread_mutex_lock(&(headSpace->insertLock));
     headSpace->numInsertsRemaining -= 1;
     if(headSpace->numInsertsRemaining == 0){
+        printf("DELETES AWAKENED\n");
         pthread_cond_broadcast(&(headSpace->insertCond));
     }
     pthread_mutex_unlock(&(headSpace->insertLock));
