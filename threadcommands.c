@@ -68,7 +68,7 @@ void* thread_search(void* arg){
         printf("%lu,No Record Found\n",time(NULL));
     }
     else{
-        printf("%lu,%lu,%s,%d\n",time(NULL),found->hash,found->name,found->salary);
+        printf("%lu,%u,%s,%d\n",time(NULL),found->hash,found->name,found->salary);
     }
     rwlock_release_readlock(headSpace->rwlock);
 
@@ -92,7 +92,7 @@ void* thread_print(void* arg){
     }
     sortRecordsByHash(list, numRecords);
     for(int i = 0; i < numRecords; i++){
-        printf("%lu,%s,%d\n", list[i]->hash, list[i]->name, list[i]->salary);
+        printf("%u,%s,%d\n", list[i]->hash, list[i]->name, list[i]->salary);
     }
     rwlock_release_readlock(headSpace->rwlock);
     
