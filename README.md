@@ -7,7 +7,7 @@ prompt> ./chash
 ```
 Notes:
 
-the main function prints out the number of lock acquisitions/releases accounting
+The main function prints out the number of lock acquisitions/releases accounting
 for the 1 anticipated grab/release from the ensuing print call that happens after it.
         
 Our delete only makes one lock grab/release.
@@ -17,4 +17,9 @@ You get it whenever it happens, good luck.
 
 The names should be at most 70 characters long in the commands file.
         
-AI was used to generate the code used to parse input from the input file. 
+AI was used to generate the code used to parse input from the input file.
+
+AI was also used for the Makefile but is was Google's new AI Overview tool.
+I just searched how to properly structure a Makefile and that was one of the results.
+I decided to just try it out and compare it to other Makefile structures I found.
+It worked decently and required less changes than other Makefile formats that I found so I decided to use it.
