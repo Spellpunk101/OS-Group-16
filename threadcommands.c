@@ -16,7 +16,7 @@ void* thread_insert(void* arg){
 
     rwlock_acquire_writelock(headSpace->rwlock);
 
-    printf("%lu,INSERT,%s,%d\n",time(NULL),name,salary);
+    printf("%lu,INSERT,%s,%u\n",time(NULL),name,salary);
     headSpace->head = insert(headSpace->head, name, salary);
     rwlock_release_writelock(headSpace->rwlock);
     //acquire locks, call functions, print
@@ -68,7 +68,7 @@ void* thread_search(void* arg){
         printf("%lu,No Record Found\n",time(NULL));
     }
     else{
-        printf("%lu,%u,%s,%d\n",time(NULL),found->hash,found->name,found->salary);
+        printf("%lu,%u,%s,%u\n",time(NULL),found->hash,found->name,found->salary);
     }
     rwlock_release_readlock(headSpace->rwlock);
 
@@ -92,7 +92,7 @@ void* thread_print(void* arg){
     }
     sortRecordsByHash(list, numRecords);
     for(int i = 0; i < numRecords; i++){
-        printf("%u,%s,%d\n", list[i]->hash, list[i]->name, list[i]->salary);
+        printf("%u,%s,%u\n", list[i]->hash, list[i]->name, list[i]->salary);
     }
     rwlock_release_readlock(headSpace->rwlock);
     
