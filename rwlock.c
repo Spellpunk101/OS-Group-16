@@ -2,8 +2,15 @@
 
 #include <semaphore.h>
 #include <stdio.h>
-#include <time.h>
+#include <stdint.h>
+#include <sys/time.h>
 #include "rwlock.h"
+
+uint64_t micro_time() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * (uint64_t)1000000 + tv.tv_usec;
+}
 
 void rwlock_init(rwlock_t *lock)
 {
@@ -21,7 +28,7 @@ void rwlock_acquire_readlock(rwlock_t *lock)
   lock->acquires++;
   if (lock->readers == 1)
     sem_wait(&lock->writelock);
-  printf("%lu,READ LOCK ACQUIRED\n", time(NULL));
+  printf("%lu,READ LOCK ACQUIRED\n", micro_time());
   sem_post(&lock->lock);
 }
 
@@ -32,7 +39,7 @@ void rwlock_release_readlock(rwlock_t *lock)
   lock->releases++;
   if (lock->readers == 0)
     sem_post(&lock->writelock);
-  printf("%lu,READ LOCK RELEASED\n", time(NULL));
+  printf("%lu,READ LOCK RELEASED\n", micro_time());
   sem_post(&lock->lock);
 }
 
@@ -40,12 +47,12 @@ void rwlock_acquire_writelock(rwlock_t *lock)
 {
   sem_wait(&lock->writelock);
   lock->acquires++;
-  printf("%lu,WRITE LOCK ACQUIRED\n", time(NULL));
+  printf("%lu,WRITE LOCK ACQUIRED\n", micro_time());
 }
 
 void rwlock_release_writelock(rwlock_t *lock)
 {
   lock->releases++;
-  printf("%lu,WRITE LOCK RELEASED\n", time(NULL));
+  printf("%lu,WRITE LOCK RELEASED\n", micro_time());
   sem_post(&lock->writelock);
 }
