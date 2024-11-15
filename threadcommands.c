@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <sys/time.h>
 #include "fhash.h"
 #include "rwlock.h"
 
@@ -66,7 +65,6 @@ void* thread_search(void* arg){
     fprintf(output, "%lu,SEARCH,%s\n",micro_time(),name);
     hashRecord* found = search(headSpace->head, name);
 
-    //TODO: change to print to output file, whereever that is
     if(found == NULL){
         fprintf(output, "%lu,No Record Found\n",micro_time());
     }
