@@ -11,9 +11,11 @@
 
 void readFile(int *thread_count, char instructions[50][3][50], int *instruction_count);
 
+FILE* output;
 
 int main()
 {
+  output = fopen("output.txt", "w");
   hashListHead_t* head = (hashListHead_t*) malloc(sizeof(hashListHead_t));
   head->rwlock = (rwlock_t*) malloc(sizeof(rwlock_t));
   rwlock_init(head->rwlock);
@@ -27,6 +29,8 @@ int main()
   int instruction_count = 0;
 
   readFile(&thread_count, instructions, &instruction_count);
+
+  fprintf(output, "Running %d threads\n", thread_count);
 
   int numInserts = 0;
   for(int i = 0; i < thread_count; i++){
@@ -62,22 +66,22 @@ int main()
   }
 
   //need some condition variable/semaphore to wait until threads done to free and print
-  
-  
+
+
   // printf("Thread Count: %d\n", thread_count);
   // printf("Instructions:\n");
   // for (int i = 0; i < instruction_count; i++)
   // {
   //   printf("[%s, %s, %s]\n", instructions[i][0], instructions[i][1], instructions[i][2]);
   // }
-  
+
   for(int i = 0; i < thread_count; i++){
     pthread_join(pthreads[i],NULL);
   }
 
-  printf("Finished all threads.\n");
-  printf("Number of lock acquisitions: %d\n",(head->rwlock)->acquires+1); //this is because we will acquire/release ONE more lock 
-  printf("Number of lock releases: %d\n", (head->rwlock)->releases+1);    //with the final call to thread_print after this.
+  fprintf(output, "Finished all threads.\n");
+  fprintf(output, "Number of lock acquisitions: %d\n",(head->rwlock)->acquires+1); //this is because we will acquire/release ONE more lock
+  fprintf(output, "Number of lock releases: %d\n", (head->rwlock)->releases+1);    //with the final call to thread_print after this.
 
   thread_args_t printArgs;
   printArgs.headSpace = head;
@@ -93,6 +97,7 @@ int main()
     free(toFree);
   }
   free(head);
+  fclose(output);
   return 0;
 }
 
