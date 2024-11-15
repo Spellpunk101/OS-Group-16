@@ -6,7 +6,7 @@ prompt> make
 prompt> ./chash
 ```
 
-notes:  the main function prints out the number of lock aquisitions/releases accounting
+notes:  the main function prints out the number of lock acquisitions/releases accounting
         for the 1 anticipated grab/release from the ensuing print call that happens after it.
         
         Our delete only makes one lock grab/release.
@@ -15,3 +15,5 @@ notes:  the main function prints out the number of lock aquisitions/releases acc
         You get it whenever it happens, good luck.
 
         The names should be at most 49 characters long in the commands file.
+        
+        AI was used to generate the code used to parse input from the input file. 
