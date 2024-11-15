@@ -13,3 +13,5 @@ notes:  the main function prints out the number of lock aquisitions/releases acc
 
         Deletes are not guaranteed to execute after searches, or after any particular insert.
         You get it whenever it happens, good luck.
+
+        Only handles up to 50 instructions, since we weren't given a specification
