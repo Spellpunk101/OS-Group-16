@@ -16,7 +16,7 @@ void* thread_insert(void* arg){
 
     rwlock_acquire_writelock(headSpace->rwlock);
 
-    printf("%uld,INSERT,%s,%d\n",time(NULL),name,salary);
+    printf("%lu,INSERT,%s,%d\n",time(NULL),name,salary);
     headSpace->head = insert(headSpace->head, name, salary);
     rwlock_release_writelock(headSpace->rwlock);
     //acquire locks, call functions, print
@@ -24,7 +24,7 @@ void* thread_insert(void* arg){
     pthread_mutex_lock(&(headSpace->insertLock));
     headSpace->numInsertsRemaining -= 1;
     if(headSpace->numInsertsRemaining == 0){
-        printf("%uld,DELETES AWAKENED\n",time(NULL));
+        printf("%lu,DELETES AWAKENED\n",time(NULL));
         pthread_cond_broadcast(&(headSpace->insertCond));
     }
     pthread_mutex_unlock(&(headSpace->insertLock));
@@ -40,14 +40,14 @@ void* thread_delete(void* arg){
 
     pthread_mutex_lock(&(headSpace->insertLock));
     while(headSpace->numInsertsRemaining != 0){
-        printf("%uld,WAITING ON INSERTS\n", time(NULL));
+        printf("%lu,WAITING ON INSERTS\n", time(NULL));
         pthread_cond_wait(&(headSpace->insertCond), &(headSpace->insertLock));
     }
     pthread_mutex_unlock(&(headSpace->insertLock));
     
     rwlock_acquire_writelock(headSpace->rwlock);
 
-    printf("%uld,DELETE,%s\n",time(NULL),name);
+    printf("%lu,DELETE,%s\n",time(NULL),name);
     headSpace->head = delete(headSpace->head, name);
     rwlock_release_writelock(headSpace->rwlock);
 
@@ -60,15 +60,15 @@ void* thread_search(void* arg){
     hashListHead_t* headSpace = args->headSpace;
 
     rwlock_acquire_readlock(headSpace->rwlock);
-    printf("%uld,SEARCH,%s\n",time(NULL),name);
+    printf("%lu,SEARCH,%s\n",time(NULL),name);
     hashRecord* found = search(headSpace->head, name);
     
     //TODO: change to print to output file, whereever that is
     if(found == NULL){
-        printf("%uld,No Record Found\n",time(NULL));
+        printf("%lu,No Record Found\n",time(NULL));
     }
     else{
-        printf("%uld,%uld,%s,%d\n",time(NULL),found->hash,found->name,found->salary);
+        printf("%lu,%lu,%s,%d\n",time(NULL),found->hash,found->name,found->salary);
     }
     rwlock_release_readlock(headSpace->rwlock);
 
@@ -92,7 +92,7 @@ void* thread_print(void* arg){
     }
     sortRecordsByHash(list, numRecords);
     for(int i = 0; i < numRecords; i++){
-        printf("%uld,%s,%d\n", list[i]->hash, list[i]->name, list[i]->salary);
+        printf("%lu,%s,%d\n", list[i]->hash, list[i]->name, list[i]->salary);
     }
     rwlock_release_readlock(headSpace->rwlock);
     
