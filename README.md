@@ -5,9 +5,10 @@ Run `make` to build the code; run `chash` to test it.
 prompt> make
 prompt> ./chash
 ```
+Notes:
 
-notes:  the main function prints out the number of lock acquisitions/releases accounting
-        for the 1 anticipated grab/release from the ensuing print call that happens after it.
+the main function prints out the number of lock acquisitions/releases accounting
+for the 1 anticipated grab/release from the ensuing print call that happens after it.
         
 Our delete only makes one lock grab/release.
 
