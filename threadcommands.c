@@ -3,8 +3,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <time.h>
+#include <sys/time.h>
 #include "fhash.h"
+#include "rwlock.h"
 
 #include "threadcommands.h"
 
@@ -16,7 +17,7 @@ void* thread_insert(void* arg){
 
     rwlock_acquire_writelock(headSpace->rwlock);
 
-    printf("%lu,INSERT,%s,%u\n",time(NULL),name,salary);
+    printf("%lu,INSERT,%s,%u\n",micro_time(),name,salary);
     headSpace->head = insert(headSpace->head, name, salary);
     rwlock_release_writelock(headSpace->rwlock);
     //acquire locks, call functions, print
@@ -24,7 +25,7 @@ void* thread_insert(void* arg){
     pthread_mutex_lock(&(headSpace->insertLock));
     headSpace->numInsertsRemaining -= 1;
     if(headSpace->numInsertsRemaining == 0){
-        printf("%lu,DELETES AWAKENED\n",time(NULL));
+        printf("%lu,DELETES AWAKENED\n",micro_time());
         pthread_cond_broadcast(&(headSpace->insertCond));
     }
     pthread_mutex_unlock(&(headSpace->insertLock));
@@ -40,14 +41,14 @@ void* thread_delete(void* arg){
 
     pthread_mutex_lock(&(headSpace->insertLock));
     while(headSpace->numInsertsRemaining != 0){
-        printf("%lu,WAITING ON INSERTS\n", time(NULL));
+        printf("%lu,WAITING ON INSERTS\n", micro_time());
         pthread_cond_wait(&(headSpace->insertCond), &(headSpace->insertLock));
     }
     pthread_mutex_unlock(&(headSpace->insertLock));
     
     rwlock_acquire_writelock(headSpace->rwlock);
 
-    printf("%lu,DELETE,%s\n",time(NULL),name);
+    printf("%lu,DELETE,%s\n",micro_time(),name);
     headSpace->head = delete(headSpace->head, name);
     rwlock_release_writelock(headSpace->rwlock);
 
@@ -60,15 +61,15 @@ void* thread_search(void* arg){
     hashListHead_t* headSpace = args->headSpace;
 
     rwlock_acquire_readlock(headSpace->rwlock);
-    printf("%lu,SEARCH,%s\n",time(NULL),name);
+    printf("%lu,SEARCH,%s\n",micro_time(),name);
     hashRecord* found = search(headSpace->head, name);
     
     //TODO: change to print to output file, whereever that is
     if(found == NULL){
-        printf("%lu,No Record Found\n",time(NULL));
+        printf("%lu,No Record Found\n",micro_time());
     }
     else{
-        printf("%lu,%u,%s,%u\n",time(NULL),found->hash,found->name,found->salary);
+        printf("%lu,%u,%s,%u\n",micro_time(),found->hash,found->name,found->salary);
     }
     rwlock_release_readlock(headSpace->rwlock);
 
