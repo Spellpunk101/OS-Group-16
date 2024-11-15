@@ -98,6 +98,8 @@ void* thread_print(void* arg){
     }
     rwlock_release_readlock(headSpace->rwlock);
 
+    free(list);
+
     return NULL;
 }
 
