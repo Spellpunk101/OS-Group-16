@@ -13,10 +13,10 @@ PRG := chash
 all: $(PRG)
 
 $(PRG): $(OBJ)
-        $(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c
-        $(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c $<
 
 clean:
-        rm -f $(OBJ) $(PRG)
+	rm -f $(OBJ) $(PRG)
