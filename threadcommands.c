@@ -15,17 +15,17 @@ void* thread_insert(void* arg){
 
     rwlock_acquire_writelock(headSpace->rwlock);
 
-    print("%ld,INSERT,%s,%d\n",time(NULL),name,salary);
+    printf("%ld,INSERT,%s,%d\n",time(NULL),name,salary);
     headSpace->head = insert(headSpace->head, name, salary);
     rwlock_release_writelock(headSpace->rwlock);
     //acquire locks, call functions, print
     
-    pthread_mutex_lock(headSpace->insertLock);
+    pthread_mutex_lock(&(headSpace->insertLock));
     headSpace->numInsertsRemaining -= 1;
     if(headSpace->numInsertsRemaining == 0){
-        pthread_cond_broadcast(headSpace->insertCond);
+        pthread_cond_broadcast(&(headSpace->insertCond));
     }
-    pthread_mutex_unlock(headSpace->insertLock);
+    pthread_mutex_unlock(&(headSpace->insertLock));
 
     return NULL;
 }
@@ -36,12 +36,12 @@ void* thread_delete(void* arg){
     hashListHead_t* headSpace = args->headSpace;
 
 
-    pthread_mutex_lock(headSpace->insertLock);
+    pthread_mutex_lock(&(headSpace->insertLock));
     while(headSpace->numInsertsRemaining != 0){
-        printf("%ld,WAITING ON INSERTS\n");
-        pthread_cond_wait(headSpace->insertCond, headSpace->insertLock);
+        printf("%ld,WAITING ON INSERTS\n", time(NULL));
+        pthread_cond_wait(&(headSpace->insertCond), &(headSpace->insertLock));
     }
-    pthread_mutex_unlock(headSpace->insertLock);
+    pthread_mutex_unlock(&(headSpace->insertLock));
     
     rwlock_acquire_writelock(headSpace->rwlock);
 
