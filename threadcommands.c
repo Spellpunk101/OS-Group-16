@@ -103,14 +103,12 @@ void* thread_print(void* arg){
     return NULL;
 }
 
+int compareHashes(const void* a, const void* b){
+    hashRecord* hashA = *(hashRecord**) a;
+    hashRecord* hashB = *(hashRecord**) b;
+    return hashA->hash - hashB->hash;
+}
+
 void sortRecordsByHash(hashRecord** list, int numEntries){
-    for(int i = 0; i < numEntries-1; i++){
-        for(int j = 0; j < numEntries-1-i; j++){
-            if(list[j]->hash > list[j+1]->hash){
-                hashRecord* tmp = list[j];
-                list[j] = list[j+1];
-                list[j+1] = tmp;
-            }
-        }
-    }
+    qsort(list, numEntries, sizeof(hashRecord*), compareHashes);
 }
