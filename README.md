@@ -14,5 +14,4 @@ notes:  the main function prints out the number of lock aquisitions/releases acc
         Deletes are not guaranteed to execute after searches, or after any particular insert.
         You get it whenever it happens, good luck.
 
-        Only handles up to 50 instructions, since we weren't given a specification. The names should
-        also be at most 49 characters long in the commands file.
+        The names should be at most 49 characters long in the commands file.
