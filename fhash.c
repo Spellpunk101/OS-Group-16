@@ -8,7 +8,7 @@
 #include "fhash.h"
 
 
-uint32_t jenkins_hash(const uint8_t* key, size_t length)
+uint32_t jenkins_hash(char* key, size_t length)
 {
   size_t i = 0;
   uint32_t hash = 0;
@@ -25,7 +25,7 @@ uint32_t jenkins_hash(const uint8_t* key, size_t length)
 }
 
 // insert a hash
-hashRecord* insert(hashRecord* head, char name[], uint32_t salary)
+hashRecord* insert(hashRecord* head, char* name, uint32_t salary)
 {
   uint32_t hash = jenkins_hash(name, strlen(name));
 
