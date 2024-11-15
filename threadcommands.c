@@ -84,9 +84,15 @@ void* thread_print(void* arg){
 
     //assuming can only handle 50 instructions
     rwlock_acquire_readlock(headSpace->rwlock);
-    hashRecord** list = (hashRecord**) calloc(50, sizeof(hashRecord*));
     int numRecords = 0;
     hashRecord* index = headSpace->head;
+    while(index != NULL){
+        numRecords++;
+        index = index->next;
+    }
+    hashRecord** list = (hashRecord**) calloc(numRecords, sizeof(hashRecord*));
+    numRecords = 0;
+    index = headSpace->head;
     while(index != NULL){
         list[numRecords] = index;
         numRecords++;
