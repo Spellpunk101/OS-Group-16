@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include "fhash.h"
 
 #include "threadcommands.h"
@@ -15,9 +16,18 @@ void* thread_insert(void* arg){
     rwlock_acquire_writelock(headSpace->rwlock);
 
     print("%ld,INSERT,%s,%d\n",time(NULL),name,salary);
-    headSpace->head = (headSpace->head, name, salary);
+    headSpace->head = insert(headSpace->head, name, salary);
     rwlock_release_writelock(headSpace->rwlock);
     //acquire locks, call functions, print
+    
+    pthread_mutex_lock(headSpace->insertLock);
+    headSpace->numInsertsRemaining -= 1;
+    if(headSpace->numInsertsRemaining == 0){
+        pthread_cond_broadcast(headSpace->insertCond);
+    }
+    pthread_mutex_unlock(headSpace->insertLock);
+
+    return NULL;
 }
 
 void* thread_delete(void* arg){
@@ -26,13 +36,20 @@ void* thread_delete(void* arg){
     hashListHead_t* headSpace = args->headSpace;
 
 
-    //TODO: wait until all inserts are cleared, somehow
-    while(1);
+    pthread_mutex_lock(headSpace->insertLock);
+    while(headSpace->numInsertsRemaining != 0){
+        printf("%ld,WAITING ON INSERTS\n");
+        pthread_cond_wait(headSpace->insertCond, headSpace->insertLock);
+    }
+    pthread_mutex_unlock(headSpace->insertLock);
+    
     rwlock_acquire_writelock(headSpace->rwlock);
 
     printf("%ld,DELETE,%s\n",time(NULL),name);
     headSpace->head = delete(headSpace->head, name);
     rwlock_release_writelock(headSpace->rwlock);
+
+    return NULL;
 }
 
 void* thread_search(void* arg){
@@ -52,6 +69,8 @@ void* thread_search(void* arg){
         printf("%ld,%d,%s,%d\n",time(NULL),found->hash,found->name,found->salary);
     }
     rwlock_release_readlock(headSpace->rwlock);
+
+    return NULL;
 }
 
 void* thread_print(void* arg){
@@ -74,6 +93,8 @@ void* thread_print(void* arg){
         printf("%d,%s,%d\n", list[i]->hash, list[i]->name, list[i]->salary);
     }
     rwlock_release_readlock(headSpace->rwlock);
+    
+    return NULL;
 }
 
 void sortRecordsByHash(hashRecord** list, int numEntries){

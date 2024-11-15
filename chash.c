@@ -6,6 +6,7 @@
 
 #include "fhash.h"
 #include "threadcommands.h"
+#include "rwlock.h"
 
 void readFile(int *thread_count, char instructions[50][3][50], int *instruction_count);
 
@@ -13,7 +14,11 @@ void readFile(int *thread_count, char instructions[50][3][50], int *instruction_
 int main()
 {
   hashListHead_t* head = (hashListHead_t*) malloc(sizeof(hashListHead_t));
+  head->rwlock = (rwlock_t*) malloc(sizeof(rwlock_t));
   rwlock_init(head->rwlock);
+  pthread_mutex_init(&(head->insertLock), NULL);
+  pthread_cond_init(&(head->insertCond), NULL);
+
   head->head = NULL;
 
   int thread_count = 0;
@@ -22,6 +27,13 @@ int main()
 
   readFile(&thread_count, instructions, &instruction_count);
 
+  int numInserts = 0;
+  for(int i = 0; i < thread_count; i++){
+    if(strcmp(instructions[i][0],"insert")==0){
+      numInserts++;
+    }
+  }
+  head->numInsertsRemaining = numInserts;
   //make thread for each command, calling functions from file
   pthread_t* pthreads = (pthread_t*) calloc(thread_count, sizeof(pthread_t));
   thread_args_t* thread_args = (thread_args_t*) calloc(thread_count, sizeof(thread_args_t));
@@ -59,6 +71,13 @@ int main()
     printf("[%s, %s, %s]\n", instructions[i][0], instructions[i][1], instructions[i][2]);
   }
 
+  free(head->rwlock);
+  hashRecord* index = head->head;
+  while(index != NULL){
+    hashRecord* toFree = index;
+    index = index->next;
+    free(toFree);
+  }
   free(head);
   return 0;
 }

@@ -11,5 +11,6 @@ void* thread_insert(void* arg);
 void* thread_delete(void* arg);
 void* thread_search(void* arg);
 void* thread_print(void* arg);
+void sortRecordsByHash(hashRecord** list, int numEntries);
 
 #endif // THREADCOMMANDS_H_

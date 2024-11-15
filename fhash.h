@@ -12,6 +12,9 @@ typedef struct hash_struct
 typedef struct{
   hashRecord* head;
   rwlock_t* rwlock;
+  int numInsertsRemaining;
+  pthread_cond_t insertCond;
+  pthread_mutex_t insertLock;
 } hashListHead_t;
 
 uint32_t jenkins_hash(const uint8_t* key, size_t length);
