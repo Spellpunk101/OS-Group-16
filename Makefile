@@ -1,22 +1,26 @@
-SRC := \
-	rwlock.c \
-        fhash.c \
-        threadcommands.c \
-        chash.c
+CC = gcc
+CFLAGS = -Wall
 
-OBJ := $(SRC:%.c=%.o)
+# Executable name
+TARGET = chash
 
-PRG := chash
+# Source files
+SRCS = chash.c rwlock.c fhash.c threadcommands.c
 
-.PHONY: all clean
+# Object files
+OBJS = $(SRCS:.c=.o)
 
-all: $(PRG)
+# Default target
+all: $(TARGET)
 
-$(PRG): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+# Rule to build the executable
+$(TARGET): $(OBJS)
+        $(CC) $(CFLAGS) $(OBJS) -o $(TARGET)
 
+# Rule to build object files
 %.o: %.c
-	$(CC) $(CFLAGS) -c $<
+        $(CC) $(CFLAGS) -c $< -o $@
 
+# Clean up
 clean:
-	rm -f $(OBJ) $(PRG)
+        rm -f $(OBJS) $(TARGET)
