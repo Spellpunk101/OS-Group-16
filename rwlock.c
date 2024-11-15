@@ -1,6 +1,7 @@
 // Modified from https://github.com/remzi-arpacidusseau/ostep-code/blob/master/threads-sema/rwlock.c
 
 #include <semaphore.h>
+#include <stdio.h>
 #include <time.h>
 #include "rwlock.h"
 

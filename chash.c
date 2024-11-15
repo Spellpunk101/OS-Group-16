@@ -15,6 +15,7 @@ int main()
 {
   hashListHead_t* head = (hashListHead_t*) malloc(sizeof(hashListHead_t));
   rwlock_init(head->rwlock);
+  head->head = NULL;
 
   int thread_count = 0;
   char instructions[50][3][50];
@@ -29,17 +30,21 @@ int main()
     if(strcmp(instructions[i][0], "insert") == 0){
       strcpy(thread_args[i].name, instructions[i][1]);
       thread_args[i].salary = atoi(instructions[i][2]);
+      thread_args[i].headSpace = head;
       pthread_create(&(pthreads[i]), NULL, thread_insert, &(thread_args[i]));
     }
     else if(strcmp(instructions[i][0], "delete") == 0){
       strcpy(thread_args[i].name, instructions[i][1]);
+      thread_args[i].headSpace = head;
       pthread_create(&(pthreads[i]), NULL, thread_delete, &(thread_args[i]));
     }
     else if(strcmp(instructions[i][0], "search") == 0){
       strcpy(thread_args[i].name, instructions[i][1]);
+      thread_args[i].headSpace = head;
       pthread_create(&(pthreads[i]), NULL, thread_search, &(thread_args[i]));
     }
     else if(strcmp(instructions[i][0], "print") == 0){
+      thread_args[i].headSpace = head;
       pthread_create(&(pthreads[i]), NULL, thread_print, &(thread_args[i]));
     }
   }
