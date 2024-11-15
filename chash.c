@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "fhash.h"
 #include "threadcommands.h"

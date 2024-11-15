@@ -1,6 +1,8 @@
 #ifndef FHASH_H_
 #define FHASH_H_
 
+#include "rwlock.h"
+
 typedef struct hash_struct
 {
   uint32_t hash;
