@@ -18,6 +18,7 @@ You get it whenever it happens, good luck.
 The names should be at most 70 characters long in the commands file.
         
 AI was used to generate the code used to parse input from the input file.
+This code was modified from static array allocation to dynamic array allocation by us humans.
 
 AI was also used for the Makefile but is was Google's new AI Overview tool.
 I just searched how to properly structure a Makefile and that was one of the results.
