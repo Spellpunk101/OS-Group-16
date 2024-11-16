@@ -15,7 +15,7 @@ Our delete only makes one lock grab/release.
 Deletes are not guaranteed to execute after searches, or after any particular insert.
 You get it whenever it happens, good luck.
 
-The names should be at most 70 characters long in the commands file.
+The names should be at most 50 characters long in the commands file, with total instruction command not exceeding 70 characters.
         
 AI was used to generate the code used to parse input from the input file.
 This code was modified from static array allocation to dynamic array allocation by us humans.
